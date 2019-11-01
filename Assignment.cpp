@@ -343,6 +343,13 @@ const TexturedColoredVertex texturedCylinderVertexArray[] = {
 	TexturedColoredVertex(vec3(0.0f, 0.5f, 0.5f), vec2(0.0f, 1.0f), vec3(-1.0f, 0.0f, 0.0f)),
 	TexturedColoredVertex(vec3(-0.35355f, 0.35355f, -0.5f), vec2(1.0f, 1.0f), vec3(-1.0f, 0.0f, 0.0f)),
 
+	TexturedColoredVertex(vec3(0.35355f, 0.35355f, 0.5f), vec2(0.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f)),
+	TexturedColoredVertex(vec3(-0.35355f, 0.35355f, 0.5f), vec2(0.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f)),
+	TexturedColoredVertex(vec3(0.35355f, -0.35355f, 0.5f), vec2(0.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f)),
+
+	TexturedColoredVertex(vec3(-0.35355f, -0.35355f, 0.5f), vec2(0.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f)),
+	TexturedColoredVertex(vec3(-0.35355f, 0.35355f, 0.5f), vec2(0.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f)),
+	TexturedColoredVertex(vec3(0.35355f, -0.35355f, 0.5f), vec2(0.0f, 0.0f), vec3(-1.0f, 0.0f, 0.0f)),
 };
 
 
@@ -589,6 +596,7 @@ void setObjectColor(int shaderProgram, GLfloat setColor[]) {
 	GLuint objectColor = glGetUniformLocation(shaderProgram, "objectColor");
 	glUniform3fv(objectColor, 1, setColor);
 }
+
 void setLighttColor(int shaderProgram, GLfloat setColor[]) {
 	glUseProgram(shaderProgram);
 	GLuint lightColor = glGetUniformLocation(shaderProgram, "lightColor");
@@ -740,13 +748,13 @@ void DrawCar(int shaderProgram, float deltaTime, int drawMode) {
 	wheelFLWorldMatrix *= rotate(mat4(1.0f), radians(wheelAngle), vec3(0.0f, 0.0f, 1.0f));
 	setWorldMatrix(shaderProgram, wheelFLWorldMatrix);
 	if (drawMode == 0) {
-		glDrawArrays(GL_TRIANGLES, 0, 48);
+		glDrawArrays(GL_TRIANGLES, 0, 54);
 	}
 	else if (drawMode == 1) {
-		glDrawArrays(GL_POINTS, 0, 48);
+		glDrawArrays(GL_POINTS, 0, 54);
 	}
 	else if (drawMode == 2) {
-		glDrawArrays(GL_LINES, 0, 48);
+		glDrawArrays(GL_LINES, 0, 54);
 	}
 
 
@@ -761,13 +769,13 @@ void DrawCar(int shaderProgram, float deltaTime, int drawMode) {
 	wheelFRWorldMatrix *= rotate(mat4(1.0f), radians(wheelAngle), vec3(0.0f, 0.0f, 1.0f));
 	setWorldMatrix(shaderProgram, wheelFRWorldMatrix);
 	if (drawMode == 0) {
-		glDrawArrays(GL_TRIANGLES, 0, 48);
+		glDrawArrays(GL_TRIANGLES, 0, 54);
 	}
 	else if (drawMode == 1) {
-		glDrawArrays(GL_POINTS, 0, 48);
+		glDrawArrays(GL_POINTS, 0, 54);
 	}
 	else if (drawMode == 2) {
-		glDrawArrays(GL_LINES, 0, 48);
+		glDrawArrays(GL_LINES, 0, 54);
 	}
 	//back left
 	mat4 wheelBLWorldMatrix = translate(mat4(1.0f), vec3(0.f));
@@ -779,13 +787,13 @@ void DrawCar(int shaderProgram, float deltaTime, int drawMode) {
 	wheelBLWorldMatrix *= rotate(mat4(1.0f), radians(wheelAngle), vec3(0.0f, 0.0f, 1.0f));
 	setWorldMatrix(shaderProgram, wheelBLWorldMatrix);
 	if (drawMode == 0) {
-		glDrawArrays(GL_TRIANGLES, 0, 48);
+		glDrawArrays(GL_TRIANGLES, 0, 54);
 	}
 	else if (drawMode == 1) {
-		glDrawArrays(GL_POINTS, 0, 48);
+		glDrawArrays(GL_POINTS, 0, 54);
 	}
 	else if (drawMode == 2) {
-		glDrawArrays(GL_LINES, 0, 48);
+		glDrawArrays(GL_LINES, 0, 54);
 	}
 
 	//back right
@@ -798,13 +806,13 @@ void DrawCar(int shaderProgram, float deltaTime, int drawMode) {
 	wheelBRWorldMatrix *= rotate(mat4(1.0f), radians(wheelAngle), vec3(0.0f, 0.0f, 1.0f));
 	setWorldMatrix(shaderProgram, wheelBRWorldMatrix);
 	if (drawMode == 0) {
-		glDrawArrays(GL_TRIANGLES, 0, 48);
+		glDrawArrays(GL_TRIANGLES, 0, 54);
 	}
 	else if (drawMode == 1) {
-		glDrawArrays(GL_POINTS, 0, 48);
+		glDrawArrays(GL_POINTS, 0, 54);
 	}
 	else if (drawMode == 2) {
-		glDrawArrays(GL_LINES, 0, 48);
+		glDrawArrays(GL_LINES, 0, 54);
 	}
 
 
