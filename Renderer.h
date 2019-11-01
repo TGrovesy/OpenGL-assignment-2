@@ -4,8 +4,10 @@ struct GLFWwindow;
 
 #define GLEW_STATIC 1
 #include <GL/glew.h>
+
 #include <vector>
 #include <glm/glm.hpp>
+
 
 enum ShaderType{
 	SHADER_SOLID_COLOUR

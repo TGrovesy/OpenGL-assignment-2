@@ -1,11 +1,13 @@
 #include "EventManager.h"
 #include "Renderer.h"
+#include "World.h"
 
 int main(int argc, char*argv[]) {
 	EventManager::Initialize();
 	Renderer::Initialize();
 
-	//TODO: Create Scene Loader
+	//World
+	World world;
 
 	if (argc > 1) {
 		//Load Scene from command line
@@ -25,11 +27,13 @@ int main(int argc, char*argv[]) {
 		//Update eventmanager
 		EventManager::Update();
 
-		//TODO: Update World
+		//Update World
 		float deltaTime = EventManager::GetFrameTime();
+		world.Update(deltaTime);
 		
-		//TODO: Draw World
-	} while (!EventManager::ExitRequested()); //TODO: Change to event manager request exit
+		//Draw World
+		world.Draw();
+	} while (!EventManager::ExitRequested()); 
 
 	Renderer::Shutdown();
 	EventManager::Shutdown();
