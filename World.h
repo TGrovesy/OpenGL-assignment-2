@@ -25,8 +25,10 @@ public:
 	
 private:
 	static World* instance;
-	//TODO: Add model
-	//TODO: Add Animation
-	//TODO: Add Camera
-	//TODO: Add current Camera
+
+	std::vector<Model*> model;
+	std::vector<Animation*> animation;
+	std::vector<AnimationKey*> animationKey;
+	std::vector<Camera*> camera;
+	unsigned int currentCamera;
 };

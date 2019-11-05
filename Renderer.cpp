@@ -25,6 +25,7 @@ unsigned int Renderer::currentShader;
 
 GLFWwindow* Renderer::window = nullptr;
 
+
 void Renderer::Initialize() {
 	window = EventManager::GetWindow();
 	glfwMakeContextCurrent(window);

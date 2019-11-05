@@ -14,10 +14,10 @@ int main(int argc, char*argv[]) {
 	} else {
 		//
 	#if defined(PLATFORM_OSX)		
-		//		world.LoadScene("Scenes/StaticScene.scene");
+		world.LoadScene("Scenes/scene1.scene");
 		//		world.LoadScene("Scenes/CoordinateSystem.scene");
 	#else
-		//		world.LoadScene("../Assets/Scenes/StaticScene.scene");
+		world.LoadScene("../Source/OpenGL-assignment-2/Assets/Scenes/scene1.scene");
 		//		world.LoadScene("../Assets/Scenes/CoordinateSystem.scene");
 	#endif
 	}

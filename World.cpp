@@ -1,9 +1,18 @@
 #include "World.h"
 #include "EventManager.h"
 #include "Renderer.h"
+#include "ParsingHelper.h"
+
+#include "StaticCamera.h"
+#include "ThirdPersonCamera.h"
+
+#include "Model.h"
+#include "CubeModel.h"
 
 #include <GLFW/glfw3.h>
+
 using namespace std;
+using namespace glm;
 
 World* World::instance;
 
@@ -11,10 +20,27 @@ World::World() {
 	instance = this;
 
 	//TODO: setup camera
+	camera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 10.0f))); //camera 0
+	camera.push_back(new StaticCamera(vec3(0, 20, 0), vec3(0, 0, 0), vec3(0, 0, -1)));
+	currentCamera = 0;
 }
 
 World::~World() {
-	//TODO: Clear models, animations and camera
+	// Models
+	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it)
+	{
+		delete *it;
+	}
+	model.clear();
+
+	//TODO: clear animation and animation keys
+
+	// Camera
+	for (vector<Camera*>::iterator it = camera.begin(); it < camera.end(); ++it)
+	{
+		delete *it;
+	}
+	camera.clear();
 }
 
 World* World::GetInstance() {
@@ -23,6 +49,14 @@ World* World::GetInstance() {
 
 void World::Update(float deltaTime) {
 	//TODO: Use event manager to handle various inputs
+
+	//Update current Camera
+	camera[currentCamera]->Update(deltaTime);
+
+	//Update Models
+	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it) {
+		(*it)->Update(deltaTime);
+	}
 }
 
 void World::Draw() {
@@ -31,11 +65,16 @@ void World::Draw() {
 	//set shader
 	glUseProgram(Renderer::GetShaderProgramID());
 
-	GLuint viewProjectionMatrixLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "viewMatrix");
+	GLuint viewProjectionMatrixLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "viewProjectionMatrix");
 	
-	//TODO: set view Prjection from camera
+	//set view Prjection from camera
+	mat4 viewProejection = camera[currentCamera]->GetViewProjectionMatrix();
+	glUniformMatrix4fv(viewProjectionMatrixLoc, 1, GL_FALSE, &viewProejection[0][0]);
 
-	//TODO: Draw Models
+	//Draw Models
+	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it) {
+		(*it)->Draw();
+	}
 
 	//Once done with shader ensure we set it as previous
 	unsigned int prevShader = Renderer::GetCurrentShader();
@@ -49,8 +88,50 @@ void World::Draw() {
 }
 
 //Load Scene
-void World::LoadScene(const char * scenePath) {
-	//TODO: All scene stuff
+void World::LoadScene(const char * scene_path)
+{
+	// Using case-insensitive strings and streams for easier parsing
+	ci_ifstream input;
+	input.open(scene_path, ios::in);
+
+	// Invalid file
+	if (input.fail())
+	{
+		fprintf(stderr, "Error loading file: %s\n", scene_path);
+		getchar();
+		exit(-1);
+	}
+
+	ci_string item;
+	while (std::getline(input, item, '['))
+	{
+		ci_istringstream iss(item);
+
+		ci_string result;
+		if (std::getline(iss, result, ']'))
+		{
+			if (result == "cube")
+			{
+				CubeModel* cube = new CubeModel();
+				cube->Load(iss);
+				model.push_back(cube);
+				
+			}
+			else if (result.empty() == false && result[0] == '#')
+			{
+				// this is defines a comment line in our scene file
+			}
+			else
+			{
+				fprintf(stderr, "Error loading scene file... !");
+				getchar();
+				exit(-1);
+			}
+		}
+	}
+	input.close();
+
+	// TODO: set animation vertex buffers
 }
 
 /*
@@ -63,6 +144,6 @@ AnimationKey* World::FindAnimationKey(string keyName) {
 }*/
 
 const Camera* World::GetCurrentCamera() const {
-	//TODO: return current camera
-	return nullptr;
+	//return current camera
+	return camera[currentCamera];
 }
