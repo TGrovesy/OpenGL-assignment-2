@@ -7,10 +7,13 @@ struct GLFWwindow;
 
 #include <vector>
 #include <glm/glm.hpp>
+#include <map>
+#include"ParsingHelper.h"
 
 
 enum ShaderType{
-	SHADER_SOLID_COLOUR
+	SHADER_SOLID_COLOUR,
+	SHADER_TEXTURE_LIGHTING
 };
 
 class Renderer {
@@ -26,13 +29,18 @@ public:
 	static unsigned int GetShaderProgramID(){ return shaderProgramID[currentShader]; }
 	static unsigned int GetCurrentShader() { return currentShader; }
 	static void SetShader(ShaderType type);
-
 	static void CheckForErrors();
 	static bool PrintError();
+	static int GetTexture(std::string texture);
+protected:
 
+	static std::map<std::string, int>* textures;
 private:
 	static GLFWwindow* window;
 
 	static std::vector<unsigned int> shaderProgramID;
 	static unsigned int currentShader;
+
+	static void LoadAllTextures();
+	static int LoadTexture(char* imagepath);
 };

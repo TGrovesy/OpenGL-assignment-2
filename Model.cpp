@@ -1,10 +1,10 @@
 #include "Model.h"
 #include "World.h"
 #include "Renderer.h"
+#include <string>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/common.hpp>
 #include <GL/glew.h>
-
 using namespace std;
 using namespace glm;
 
@@ -28,19 +28,18 @@ void Model::Draw()
 {
 }
 
-void Model::Load(ci_istringstream& iss)
+void Model::Load(istringstream& iss)
 {
-	ci_string line;
+	string line;
 
 	// Parse model line by line
 	while (std::getline(iss, line))
 	{
 		// Splitting line into tokens
-		ci_istringstream strstr(line);
-		istream_iterator<ci_string, char, ci_char_traits> it(strstr);
-		istream_iterator<ci_string, char, ci_char_traits> end;
-		vector<ci_string> token(it, end);
-
+		istringstream strstr(line);
+		istream_iterator<string, char> it(strstr);
+		istream_iterator<string, char> end;
+		vector<string> token(it, end);
 		if (ParseLine(token) == false)
 		{
 			fprintf(stderr, "Error loading scene file... token:  %s!", token[0].c_str());
@@ -51,7 +50,7 @@ void Model::Load(ci_istringstream& iss)
 }
 
 /*Defines how we read in our scene file forour models*/
-bool Model::ParseLine(const std::vector<ci_string> &token)
+bool Model::ParseLine(const vector<string> &token)
 {
 	if (token.empty() == false)
 	{
@@ -101,7 +100,7 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			assert(token.size() > 2);
 			assert(token[1] == "=");
 
-			ci_string animName = token[2];
+			string animName = token[2];
 
 			//animation = World::GetInstance()->FindAnimation(animName);
 		}
@@ -113,6 +112,13 @@ bool Model::ParseLine(const std::vector<ci_string> &token)
 			colour.g = static_cast<float>(atof(token[3].c_str()));
 			colour.b = static_cast<float>(atof(token[4].c_str()));
 
+		}
+		else if (token[0] == "texture") {
+
+			assert(token.size() > 2);
+			assert(token[1] == "=");
+
+			textureName = token[2];
 		}
 		else
 		{

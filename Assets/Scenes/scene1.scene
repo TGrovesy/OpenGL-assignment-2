@@ -4,7 +4,8 @@ name     = "Ground"
 scaling  = 100.0 1.0 100.0
 position = 0.0 -0.5 0.0
 rotation = 0.0 0.0 1.0 0.0
-colour = 0.0 1.0 0.0
+colour = 0.0 0.0 1.0
+texture = brick
 
 
 [Cube]
@@ -13,3 +14,13 @@ scaling  = 1.0 1.0 1.0
 position = 0.0 1.0 0.0
 rotation = 0.0 0.0 1.0 180
 colour = 1.0 1.0 0.0
+texture = wdsad
+
+[Cube]
+name     = "RectBox"
+scaling  = 10.0 1.0 10.0
+position = 0.0 1.0 0.0
+rotation = 0.0 0.0 1.0 180
+colour = 0.0 1.0 0.0
+texture = brick
+

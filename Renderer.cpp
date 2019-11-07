@@ -10,9 +10,12 @@ using namespace std;
 
 #include "Renderer.h"
 #include "EventManager.h"
+#include "ParsingHelper.h"
 
 #include <GLFW/glfw3.h>
 
+#include <FreeImageIO.h>
+#include <map>
 
 #if defined(PLATFORM_OSX)
 #define fscanf_s fscanf
@@ -25,6 +28,9 @@ unsigned int Renderer::currentShader;
 
 GLFWwindow* Renderer::window = nullptr;
 
+std::map<std::string, int>* Renderer::textures = new std::map<std::string, int>();
+
+GLuint ERROR_TEXTURE;
 
 void Renderer::Initialize() {
 	window = EventManager::GetWindow();
@@ -37,6 +43,7 @@ void Renderer::Initialize() {
 		getchar();
 		exit(-1);
 	}
+	LoadAllTextures();
 
 	glGetError(); // deals with random GLEW error on initializeation
 
@@ -47,7 +54,7 @@ void Renderer::Initialize() {
 	glDepthFunc(GL_LESS);
 
 	//Enable Face culling
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
 	CheckForErrors();
 
@@ -60,7 +67,16 @@ void Renderer::Initialize() {
 	shaderProgramID.push_back(
 		LoadShaders(shaderPathPrefix + "SolidColor.vertexshader",
 			shaderPathPrefix + "SolidColor.fragmentshader")
+	); 
+	shaderProgramID.push_back(
+		LoadShaders(shaderPathPrefix + "LightingShader.vertexshader",
+			shaderPathPrefix + "LightingShader.fragmentshader")
 	);
+
+
+	glActiveTexture(GL_TEXTURE0);
+	GLuint textureSampler = glGetUniformLocation(shaderProgramID[1], "textureSampler"); //index 1 is ourlighting shader
+	glUniform1i(textureSampler, 0);
 } 
 
 void Renderer::Shutdown()
@@ -246,5 +262,74 @@ void Renderer::CheckForErrors()
 {
 	while (PrintError() == false)
 	{
+	}
+}
+
+int Renderer::LoadTexture(char* imagepath)
+{
+	// Load image using the Free Image library
+	FREE_IMAGE_FORMAT format = FreeImage_GetFileType(imagepath, 0);
+	FIBITMAP* image = FreeImage_Load(format, imagepath);
+	FIBITMAP* image32bits = FreeImage_ConvertTo32Bits(image);
+
+	// Get an available texture index from OpenGL
+	GLuint texture = 0;
+	glGenTextures(1, &texture);
+	assert(texture != 0);
+
+	// Set OpenGL filtering properties (bi-linear interpolation)
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// Retrieve width and hight
+	int width = FreeImage_GetWidth(image32bits);
+	int height = FreeImage_GetHeight(image32bits);
+
+	// This will upload the texture to the GPU memory
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height,
+		0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image32bits));
+
+	// Free images
+	FreeImage_Unload(image);
+	FreeImage_Unload(image32bits);
+
+	return texture;
+}
+
+void Renderer::LoadAllTextures() {
+	
+	std::string texturePathPrefix = "../Source/OpenGL-assignment-2/Assets/Textures/";
+#if defined(PLATFORM_OSX)
+	GLuint brickTextureID = LoadTexture("Textures/brick.jpg");
+	GLuint cementTextureID = LoadTexture("Textures/cement.jpg");
+	GLuint grassTextureID = LoadTexture("Textures/grass.jpg");
+	GLuint metalTextureID = LoadTexture("Textures/metal.jpg");
+	GLuint tireTextureID = LoadTexture("Textures/tire.jpg");
+#else
+	GLuint brickTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/brick.jpg");
+	GLuint cementTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/cement.jpg");
+	GLuint grassTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/grass.jpg");
+	GLuint metalTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/metal.jpg");
+	GLuint tireTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/tire.jpg");
+	ERROR_TEXTURE = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/ERROR.jpg");
+#endif
+
+	textures->insert(pair<char*, int>("grass", grassTextureID));
+	textures->insert(pair<char*, int>("cement", cementTextureID));
+	textures->insert(pair<char*, int>("brick", brickTextureID));
+	textures->insert(pair<char*, int>("metal", metalTextureID));
+	textures->insert(pair<char*, int>("tire", tireTextureID));
+}
+
+int Renderer::GetTexture(std::string texture) {
+	try {
+		return textures->at(texture);
+	}
+	catch (exception e) {
+		return 0;
 	}
 }

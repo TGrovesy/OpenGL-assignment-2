@@ -12,7 +12,7 @@ public:
 	virtual void Draw();
 
 protected:
-	virtual bool ParseLine(const std::vector<ci_string> &token);
+	virtual bool ParseLine(const std::vector<std::string> &token);
 
 private:
 	// The vertex format could be different for different types of models
@@ -20,6 +20,7 @@ private:
 	{
 		glm::vec3 position;
 		glm::vec3 normal;
+		glm::vec2 UV;
 	};
 
 	unsigned int VAO; //Vertex array 

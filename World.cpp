@@ -88,12 +88,12 @@ void World::Draw() {
 }
 
 //Load Scene
-void World::LoadScene(const char * scene_path)
-{
-	// Using case-insensitive strings and streams for easier parsing
-	ci_ifstream input;
-	input.open(scene_path, ios::in);
 
+void World::LoadScene(const char * scene_path) {
+	// Using case-insensitive strings and streams for easier parsing
+	ifstream input;
+	input.open(scene_path, ios::in);
+	
 	// Invalid file
 	if (input.fail())
 	{
@@ -101,21 +101,21 @@ void World::LoadScene(const char * scene_path)
 		getchar();
 		exit(-1);
 	}
-
-	ci_string item;
+	string item;
 	while (std::getline(input, item, '['))
 	{
-		ci_istringstream iss(item);
+		//printf(item.c_str());
+		istringstream iss(item);
 
-		ci_string result;
+		string result;
 		if (std::getline(iss, result, ']'))
 		{
-			if (result == "cube")
+			if (result == "Cube")
 			{
 				CubeModel* cube = new CubeModel();
 				cube->Load(iss);
 				model.push_back(cube);
-				
+
 			}
 			else if (result.empty() == false && result[0] == '#')
 			{
@@ -130,8 +130,6 @@ void World::LoadScene(const char * scene_path)
 		}
 	}
 	input.close();
-
-	// TODO: set animation vertex buffers
 }
 
 /*

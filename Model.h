@@ -17,7 +17,7 @@ public:
 	virtual void Update(float deltaTime) = 0;
 	virtual void Draw() = 0;
 
-	void Load(ci_istringstream& iss);
+	void Load(std::istringstream& iss);
 
 	virtual glm::mat4 GetWorldMatrix() const;
 
@@ -30,16 +30,17 @@ public:
 	glm::vec3 GetScaling() const { return scaling; }
 	glm::vec3 GetRotationAxis() const { return rotationAxis; }
 	float     GetRotationAngle() const { return rotationAngleInDegrees; }
-	ci_string GetName() { return name; }
+	std::string GetName() { return name; }
 
 protected:
-	virtual bool ParseLine(const std::vector<ci_string> &token) = 0;
+	virtual bool ParseLine(const std::vector<std::string> &token) = 0;
 
-	ci_string name; // The model name is mainly for debugging
+	std::string name; // The model name is mainly for debugging
 	glm::vec3 position;
 	glm::vec3 scaling;
 	glm::vec3 rotationAxis;
 	glm::vec3 colour;
+	std::string textureName;
 	
 	float     rotationAngleInDegrees;
 
