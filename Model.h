@@ -26,6 +26,11 @@ public:
 	void SetRotation(glm::vec3 axis, float angleDegrees);
 	void SetColour(glm::vec3 colour);
 
+	//Material
+	void SetMaterialAmbient(glm::vec3 ambient);
+	void SetMaterialDiffuse(glm::vec3 diffuse);
+	void SetMaterialSpecular(glm::vec3 specular);
+
 	glm::vec3 GetPosition() const { return position; }
 	glm::vec3 GetScaling() const { return scaling; }
 	glm::vec3 GetRotationAxis() const { return rotationAxis; }
@@ -41,6 +46,14 @@ protected:
 	glm::vec3 rotationAxis;
 	glm::vec3 colour;
 	std::string textureName;
+	glm::vec3 matAmbient = glm::vec3(0.9f, 0.9f, 0.9f);
+	glm::vec3 matDiffuse = glm::vec3(0.9f, 0.9f, 0.9f);
+	glm::vec3 matSpecular = glm::vec3(0.9f, 0.9f, 0.9f);
+	float matShininess = 32.0f;
+	glm::vec3 lightAmbient = glm::vec3(0.9f, 0.9f, 0.9f);
+	glm::vec3 lightDiffuse = glm::vec3(0.9f, 0.9f, 0.9f);
+	glm::vec3 lightSpecular = glm::vec3(0.9f, 0.9f, 0.9f);
+	glm::vec3 lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
 	
 	float     rotationAngleInDegrees;
 

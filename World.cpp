@@ -8,6 +8,7 @@
 
 #include "Model.h"
 #include "CubeModel.h"
+#include "LightModel.h"
 
 #include <GLFW/glfw3.h>
 
@@ -115,6 +116,12 @@ void World::LoadScene(const char * scene_path) {
 				CubeModel* cube = new CubeModel();
 				cube->Load(iss);
 				model.push_back(cube);
+
+			}
+			else if (result == "Light") {
+				LightModel* light = new LightModel();
+				light->Load(iss);
+				model.push_back(light);
 
 			}
 			else if (result.empty() == false && result[0] == '#')

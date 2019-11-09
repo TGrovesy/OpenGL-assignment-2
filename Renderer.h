@@ -32,6 +32,9 @@ public:
 	static void CheckForErrors();
 	static bool PrintError();
 	static int GetTexture(std::string texture);
+	
+	static void SetLightPos(glm::vec3 pos);
+
 protected:
 
 	static std::map<std::string, int>* textures;

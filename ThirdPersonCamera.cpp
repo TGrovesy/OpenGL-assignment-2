@@ -1,5 +1,6 @@
 #include "ThirdPersonCamera.h"
 #include "EventManager.h"
+#include "Renderer.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -45,6 +46,11 @@ void ThirdPersonCamera::Update(float dt)
 
 	vec3 sideVector = glm::cross(lookAt, vec3(0.0f, 1.0f, 0.0f));
 	glm::normalize(sideVector);
+
+	//set viewPos
+
+	GLuint camViewPosLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "viewPos");
+	glUniform3fv(camViewPosLoc, 1, new float[3]{ position.x, position.y, position.z });
 
 	//Camera Controll
 	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)

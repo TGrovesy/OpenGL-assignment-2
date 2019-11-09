@@ -26,6 +26,11 @@ void Model::Update(float deltaTime)
 
 void Model::Draw()
 {
+	//set colour
+	GLuint colourLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "inColour");
+	float colours[] = { colour.r, colour.g, colour.b, 1.0 };
+	glUniform4fv(colourLoc, 1, colours);
+
 }
 
 void Model::Load(istringstream& iss)
@@ -120,6 +125,60 @@ bool Model::ParseLine(const vector<string> &token)
 
 			textureName = token[2];
 		}
+		else if (token[0] == "material.ambient") {
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+			matAmbient.x = static_cast<float>(atof(token[2].c_str()));
+			matAmbient.y = static_cast<float>(atof(token[3].c_str()));
+			matAmbient.z = static_cast<float>(atof(token[4].c_str()));
+		}
+		else if (token[0] == "material.diffuse") {
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+			matDiffuse.x = static_cast<float>(atof(token[2].c_str()));
+			matDiffuse.y = static_cast<float>(atof(token[3].c_str()));
+			matDiffuse.z = static_cast<float>(atof(token[4].c_str()));
+		}
+		else if (token[0] == "material.specular") {
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+			matSpecular.x = static_cast<float>(atof(token[2].c_str()));
+			matSpecular.y = static_cast<float>(atof(token[3].c_str()));
+			matSpecular.z = static_cast<float>(atof(token[4].c_str()));
+		}
+		else if (token[0] == "material.shininess") {
+			assert(token.size() > 2);
+			assert(token[1] == "=");
+			matShininess = static_cast<float>(atof(token[2].c_str()));
+		}
+		else if (token[0] == "light.ambient") {
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+			lightAmbient.x = static_cast<float>(atof(token[2].c_str()));
+			lightAmbient.y = static_cast<float>(atof(token[3].c_str()));
+			lightAmbient.z = static_cast<float>(atof(token[4].c_str()));
+		}
+		else if (token[0] == "light.diffuse") {
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+			lightDiffuse.x = static_cast<float>(atof(token[2].c_str()));
+			lightDiffuse.y = static_cast<float>(atof(token[3].c_str()));
+			lightDiffuse.z = static_cast<float>(atof(token[4].c_str()));
+		}
+		else if (token[0] == "light.specular") {
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+			lightSpecular.x = static_cast<float>(atof(token[2].c_str()));
+			lightSpecular.y = static_cast<float>(atof(token[3].c_str()));
+			lightSpecular.z = static_cast<float>(atof(token[4].c_str()));
+		}
+		else if (token[0] == "light.position") {
+			assert(token.size() > 4);
+			assert(token[1] == "=");
+			lightPosition.x = static_cast<float>(atof(token[2].c_str()));
+			lightPosition.y = static_cast<float>(atof(token[3].c_str()));
+			lightPosition.z = static_cast<float>(atof(token[4].c_str()));
+		}
 		else
 		{
 			return false;
@@ -164,6 +223,22 @@ void Model::SetColour(glm::vec3 colour)
 {
 	colour = colour;
 }
+
+void Model::SetMaterialAmbient(glm::vec3 ambient)
+{
+	matAmbient = ambient;
+}
+
+void Model::SetMaterialSpecular(glm::vec3 specular)
+{
+	matSpecular = specular;
+}
+
+void Model::SetMaterialDiffuse(glm::vec3 diffuse)
+{
+	matDiffuse = diffuse;
+}
+
 
 
 void Model::SetRotation(glm::vec3 axis, float angleDegrees)

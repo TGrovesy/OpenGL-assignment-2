@@ -1,10 +1,10 @@
 
-#include "CubeModel.h"
+#include "LightModel.h"
 #include "Renderer.h"
 
 using namespace glm;
 
-CubeModel::CubeModel(vec3 size) : Model()
+LightModel::LightModel(vec3 size) : Model()
 {
 	// Create Vertex Buffer for all the verices of the Cube
 	vec3 halfSize = size * 0.5f;
@@ -72,11 +72,11 @@ CubeModel::CubeModel(vec3 size) : Model()
 
 	// 1st attribute buffer : vertex Positions
 	glVertexAttribPointer(0,
-		3,               
-		GL_FLOAT,        
-		GL_FALSE,        
-		sizeof(Vertex), 
-		(void*)0        
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		sizeof(Vertex),
+		(void*)0
 	);
 	glEnableVertexAttribArray(0);
 
@@ -86,7 +86,7 @@ CubeModel::CubeModel(vec3 size) : Model()
 		GL_FLOAT,
 		GL_FALSE,
 		sizeof(Vertex),
-		(void*)sizeof(vec3)    
+		(void*)sizeof(vec3)
 	);
 	glEnableVertexAttribArray(1);
 
@@ -101,20 +101,20 @@ CubeModel::CubeModel(vec3 size) : Model()
 
 }
 
-CubeModel::~CubeModel()
+LightModel::~LightModel()
 {
 	// Free the GPU from the Vertex Buffer
 	glDeleteBuffers(1, &VBO);
 	glDeleteVertexArrays(1, &VAO);
 }
 
-void CubeModel::Update(float deltaTime)
-{ 
+void LightModel::Update(float deltaTime)
+{
 	//ANIMATION STUFF HERE IF DESIRED E.G. Rotation
 	Model::Update(deltaTime);
 }
 
-void CubeModel::Draw()
+void LightModel::Draw()
 {
 	Renderer::SetShader(SHADER_TEXTURE_LIGHTING);
 	glUseProgram(Renderer::GetShaderProgramID());
@@ -128,21 +128,29 @@ void CubeModel::Draw()
 	glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, &GetWorldMatrix()[0][0]);
 
 
+	//set colour
+	GLuint colourLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "inColour");
+	float colours[] = { colour.r, colour.g, colour.b, 1.0 };
+	glUniform4fv(colourLoc, 1, colours);
 
-	//set Material
-	GLuint matAmbLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "material.ambient");
-	GLuint matDiffLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "material.diffuse");
-	GLuint matSpecLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "material.specular");
-	GLuint matShinLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "material.shininess");
-	glUniform3fv(matAmbLoc, 1, new float[3]{ matAmbient.x, matAmbient.y, matAmbient.z });
-	glUniform3fv(matDiffLoc, 1, new float[3]{ matDiffuse.x, matDiffuse.y, matDiffuse.z });
-	glUniform3fv(matSpecLoc, 1, new float[3]{ matSpecular.x, matSpecular.y, matSpecular.z });
-	glUniform1f(matShinLoc, matShininess);
+	//set light
+	GLuint lightAmbLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "light.ambient");
+	GLuint lightDiffLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "light.diffuse");
+	GLuint lightSpecLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "light.specular");
+	GLuint lightPosLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "light.position");
+	GLuint lightPLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "lightPos");
+	glUniform3fv(lightAmbLoc, 1, new float[3]{ lightAmbient.x, lightAmbient.y, lightAmbient.z});
+	glUniform3fv(lightDiffLoc, 1, new float[3]{ lightDiffuse.x, lightDiffuse.y, lightDiffuse.z });
+	glUniform3fv(lightSpecLoc, 1, new float[3]{ lightSpecular.x, lightSpecular.y, lightSpecular.z });
+	glUniform3fv(lightPosLoc, 1, new float[3]{ lightPosition.x, lightPosition.y, lightPosition.z});
+	glUniform3fv(lightPLoc, 1, new float[3]{ lightPosition.x, lightPosition.y, lightPosition.z });
+
+
 	// Draw the triangles
 	glDrawArrays(GL_TRIANGLES, 0, 36); // 36 vertices: 3 * 2 * 6 
 }
 
-bool CubeModel::ParseLine(const std::vector<std::string> &token)
+bool LightModel::ParseLine(const std::vector<std::string> &token)
 {
 	if (token.empty())
 	{
