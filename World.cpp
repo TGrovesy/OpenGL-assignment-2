@@ -9,6 +9,7 @@
 #include "Model.h"
 #include "CubeModel.h"
 #include "LightModel.h"
+#include "CarModel.h"
 
 #include <GLFW/glfw3.h>
 
@@ -122,6 +123,12 @@ void World::LoadScene(const char * scene_path) {
 				LightModel* light = new LightModel();
 				light->Load(iss);
 				model.push_back(light);
+
+			}
+			else if (result == "Car") {
+				CarModel* car = new CarModel();
+				car->Load(iss);
+				model.push_back(car);
 
 			}
 			else if (result.empty() == false && result[0] == '#')

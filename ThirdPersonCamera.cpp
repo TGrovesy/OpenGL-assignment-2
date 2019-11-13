@@ -24,9 +24,6 @@ void ThirdPersonCamera::Update(float dt)
 	// Prevent from having the camera move only when the cursor is within the windows
 	EventManager::DisableMouseCursor();
 
-	// Mouse motion to get the variation in angle
-	horizontalAngle -= EventManager::GetMouseMotionX() * angularSpeed * dt;
-	verticalAngle -= EventManager::GetMouseMotionY() * angularSpeed * dt;
 
 	// Clamp vertical angle to [-85, 85] degrees
 	verticalAngle = std::max(-85.0f, std::min(85.0f, verticalAngle));
@@ -47,31 +44,48 @@ void ThirdPersonCamera::Update(float dt)
 	vec3 sideVector = glm::cross(lookAt, vec3(0.0f, 1.0f, 0.0f));
 	glm::normalize(sideVector);
 
+	vec3 upVector(0, 1, 0);
+
 	//set viewPos
 
 	GLuint camViewPosLoc = glGetUniformLocation(Renderer::GetShaderProgramID(), "viewPos");
 	glUniform3fv(camViewPosLoc, 1, new float[3]{ position.x, position.y, position.z });
-
+	
 	//Camera Controll
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_W) == GLFW_PRESS)
+	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
-		position += lookAt * dt * speed;
+		if (EventManager::GetMouseMotionY() < 0) {
+			position += 30.0f * lookAt* dt;
+		}
+		else if (EventManager::GetMouseMotionY() > 0) {
+			position -= 30.0f * lookAt* dt;
+		}
+	}
+	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{
+		if (EventManager::GetMouseMotionX() < 0) {
+			position -= 15.0f * sideVector* dt;
+		}
+		else if (EventManager::GetMouseMotionX() > 0) {
+			position += 15.0f * sideVector* dt;
+		}
+	}
+	else if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) { //pan Y direction
+		if (EventManager::GetMouseMotionY() < 0) {
+			position += 15.0f * upVector* dt;
+		}
+		else if (EventManager::GetMouseMotionY() > 0) {
+			position -= 15.0f * upVector* dt;
+		}
+	}
+	else {
+
+		// Mouse motion to get the variation in angle
+		horizontalAngle -= EventManager::GetMouseMotionX() * angularSpeed * dt;
+		verticalAngle -= EventManager::GetMouseMotionY() * angularSpeed * dt;
 	}
 
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_S) == GLFW_PRESS)
-	{
-		position -= lookAt * dt * speed;
-	}
-
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_D) == GLFW_PRESS)
-	{
-		position += sideVector * dt * speed;
-	}
-
-	if (glfwGetKey(EventManager::GetWindow(), GLFW_KEY_A) == GLFW_PRESS)
-	{
-		position -= sideVector * dt * speed;
-	}
+	
 }
 
 glm::mat4 ThirdPersonCamera::GetViewMatrix() const

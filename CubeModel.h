@@ -13,7 +13,8 @@ public:
 
 protected:
 	virtual bool ParseLine(const std::vector<std::string> &token);
-
+	unsigned int VAO; //Vertex array 
+	unsigned int VBO; //vertex buffer
 private:
 	// The vertex format could be different for different types of models
 	struct Vertex
@@ -23,6 +24,4 @@ private:
 		glm::vec2 UV;
 	};
 
-	unsigned int VAO; //Vertex array 
-	unsigned int VBO; //vertex buffer
 };
