@@ -7,6 +7,7 @@ class Camera
 public:
 	Camera();
 	virtual ~Camera();
+	void CurrentPlayerPosition(glm::vec3 pos) { playerPosition = pos; };
 
 	virtual void Update(float deltaTime) = 0;
 
@@ -14,6 +15,7 @@ public:
 	virtual glm::mat4 GetProjectionMatrix() const;
 	glm::mat4 GetViewProjectionMatrix() const;
 
-	
+protected:
+	glm::vec3 playerPosition;
 };
 

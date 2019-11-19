@@ -50,6 +50,8 @@ void CarModel::Update(float deltaTime)
 	{
 		carYRotation -= 120.0f * deltaTime;
 	}
+
+	position = carPos;
 }
 
 void CarModel::Draw()

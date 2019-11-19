@@ -5,6 +5,7 @@
 
 #include "StaticCamera.h"
 #include "ThirdPersonCamera.h"
+#include "FirstPersonCamera.h"
 
 #include "Model.h"
 #include "CubeModel.h"
@@ -18,11 +19,14 @@ using namespace glm;
 
 World* World::instance;
 
+bool isFirstPerson = false;
+
 World::World() {
 	instance = this;
 
 	//TODO: setup camera
-	camera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 10.0f))); //camera 0
+	camera.push_back(new ThirdPersonCamera(vec3(3.0f, 5.0f, 10.0f))); //camera 0 (Third person Camera)
+	camera.push_back(new FirstPersonCamera(vec3(3.0f, 5.0f, 10.0f))); //camera 1 (first person camera)
 	camera.push_back(new StaticCamera(vec3(0, 20, 0), vec3(0, 0, 0), vec3(0, 0, -1)));
 	currentCamera = 0;
 }
@@ -49,11 +53,27 @@ World* World::GetInstance() {
 	return instance;
 }
 
+int lastCState = GLFW_RELEASE;
 void World::Update(float deltaTime) {
 	//TODO: Use event manager to handle various inputs
 
 	//Update current Camera
+	camera[currentCamera]->CurrentPlayerPosition(playerCar->GetPosition());
 	camera[currentCamera]->Update(deltaTime);
+
+	//check car
+	if (lastCState == GLFW_RELEASE&&glfwGetKey(EventManager::GetWindow(), GLFW_KEY_C) == GLFW_PRESS)
+	{
+		isFirstPerson = !isFirstPerson;
+	}
+	lastCState = glfwGetKey(EventManager::GetWindow(), GLFW_KEY_C);
+
+	if (isFirstPerson) {
+		currentCamera = 1;
+	}
+	else {
+		currentCamera = 0;
+	}
 
 	//Update Models
 	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it) {
@@ -72,6 +92,8 @@ void World::Draw() {
 	//set view Prjection from camera
 	mat4 viewProejection = camera[currentCamera]->GetViewProjectionMatrix();
 	glUniformMatrix4fv(viewProjectionMatrixLoc, 1, GL_FALSE, &viewProejection[0][0]);
+
+
 
 	//Draw Models
 	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it) {
@@ -125,11 +147,11 @@ void World::LoadScene(const char * scene_path) {
 				model.push_back(light);
 
 			}
-			else if (result == "Car") {
+			else if (result == "PlayerCar") {
 				CarModel* car = new CarModel();
 				car->Load(iss);
 				model.push_back(car);
-
+				playerCar = car;
 			}
 			else if (result.empty() == false && result[0] == '#')
 			{

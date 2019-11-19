@@ -1,6 +1,9 @@
 #include "ThirdPersonCamera.h"
+#include "CarModel.h"
 #include "EventManager.h"
 #include "Renderer.h"
+#include "World.h"
+#include "Main.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -25,6 +28,7 @@ void ThirdPersonCamera::Update(float dt)
 	EventManager::DisableMouseCursor();
 
 
+
 	// Clamp vertical angle to [-85, 85] degrees
 	verticalAngle = std::max(-85.0f, std::min(85.0f, verticalAngle));
 	if (horizontalAngle > 360)
@@ -38,7 +42,6 @@ void ThirdPersonCamera::Update(float dt)
 
 	float theta = radians(horizontalAngle);
 	float phi = radians(verticalAngle);
-
 	lookAt = vec3(cosf(phi)*cosf(theta), sinf(phi), -cosf(phi)*sinf(theta));
 
 	vec3 sideVector = glm::cross(lookAt, vec3(0.0f, 1.0f, 0.0f));
@@ -52,6 +55,7 @@ void ThirdPersonCamera::Update(float dt)
 	glUniform3fv(camViewPosLoc, 1, new float[3]{ position.x, position.y, position.z });
 	
 	//Camera Controll
+	/*
 	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
 		if (EventManager::GetMouseMotionY() < 0) {
@@ -83,12 +87,19 @@ void ThirdPersonCamera::Update(float dt)
 		// Mouse motion to get the variation in angle
 		horizontalAngle -= EventManager::GetMouseMotionX() * angularSpeed * dt;
 		verticalAngle -= EventManager::GetMouseMotionY() * angularSpeed * dt;
-	}
+	}*/
 
-	
+	// Mouse motion to get the variation in angle
+	horizontalAngle -= EventManager::GetMouseMotionX() * angularSpeed * dt;
+	verticalAngle -= EventManager::GetMouseMotionY() * angularSpeed * dt;
+	position = playerPosition;
 }
 
 glm::mat4 ThirdPersonCamera::GetViewMatrix() const
 {
-	return glm::lookAt(position, position + lookAt, vec3(0.0f, 1.0f, 0.0f));
+	float theta = radians(horizontalAngle);
+	float phi = radians(verticalAngle);
+	float radius = 5.0f;
+	vec3 lookAtPos = position - vec3(radius * cosf(phi)*cosf(theta),radius * sinf(phi), radius * -cosf(phi)*sinf(theta));
+	return glm::lookAt(lookAtPos, position + lookAt, vec3(0.0f, 1.0f, 0.0f));
 }

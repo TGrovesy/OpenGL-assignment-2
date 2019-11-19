@@ -31,4 +31,5 @@ private:
 	std::vector<AnimationKey*> animationKey;
 	std::vector<Camera*> camera;
 	unsigned int currentCamera;
+	Model* playerCar;
 };

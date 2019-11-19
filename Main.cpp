@@ -1,12 +1,20 @@
+#include "Main.h"
 #include "EventManager.h"
 #include "Renderer.h"
 #include "World.h"
 
+Main::Main() {
+
+}
+
+Main::~Main() {
+
+}
+
+
 int main(int argc, char*argv[]) {
 	EventManager::Initialize();
 	Renderer::Initialize();
-
-	//World
 	World world;
 
 	if (argc > 1) {

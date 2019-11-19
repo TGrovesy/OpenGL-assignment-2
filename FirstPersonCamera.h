@@ -2,11 +2,11 @@
 
 #include "Camera.h"
 
-class ThirdPersonCamera : public Camera
+class FirstPersonCamera : public Camera
 {
 public:
-	ThirdPersonCamera(glm::vec3 pos);
-	virtual ~ThirdPersonCamera();
+	FirstPersonCamera(glm::vec3 pos);
+	virtual ~FirstPersonCamera();
 
 	virtual void Update(float deltaTime);
 
@@ -24,3 +24,4 @@ private:
 	glm::vec3 lookAt;
 };
 
+#pragma once

@@ -37,8 +37,11 @@ public:
 	float     GetRotationAngle() const { return rotationAngleInDegrees; }
 	std::string GetName() { return name; }
 
+	
+
 protected:
 	virtual bool ParseLine(const std::vector<std::string> &token) = 0;
+
 
 	std::string name; // The model name is mainly for debugging
 	glm::vec3 position;
