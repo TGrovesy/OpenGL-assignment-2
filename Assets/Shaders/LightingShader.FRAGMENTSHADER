@@ -12,6 +12,7 @@ uniform sampler2D textureSampler; //for textureSampler
 uniform bool textured;
 
 
+uniform float opacity = 1;
 uniform vec3 objectColour = vec3(1.0);
 
 struct Material{
@@ -55,7 +56,7 @@ void main()
 	vec3 specular = (spec * material.specular) * light.specular;
 	vec3 result;
 	if(true){
-		result =(ambient + diffuse + specular) * textureColour.xyz;
+		result =(ambient + diffuse + specular) * textureColour.xyz * opacity;
 		//result = textureColour.rgb;
 	}else{
 		//result = (ambient + diffuse + specular) * vertexColour.rgb;

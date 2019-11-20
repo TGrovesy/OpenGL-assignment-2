@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CubeModel.h"
+#include "ParticleQuad.h"
 #include <glm/glm.hpp>  // GLM is an optimized math library with syntax to similar to OpenGL Shading Language
 #include <glm/gtc/matrix_transform.hpp> // include this to create transformation matrices
 #include <glm/common.hpp>
@@ -24,5 +25,11 @@ public:
 	float wheelAngle = 0.0f;
 
 protected:
+
+private:
+
+	float spawnTimer;
+	const float SPAWN_PERIOD = 0.25;
+	std::vector<ParticleQuad*> exhaustParticles;
 
 };

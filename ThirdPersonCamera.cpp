@@ -90,7 +90,13 @@ void ThirdPersonCamera::Update(float dt)
 	}*/
 
 	// Mouse motion to get the variation in angle
-	horizontalAngle -= EventManager::GetMouseMotionX() * angularSpeed * dt;
+
+	if (glfwGetMouseButton(EventManager::GetWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+		horizontalAngle -= EventManager::GetMouseMotionX() * angularSpeed * dt;
+	}
+	else {
+		horizontalAngle = playerRotationY + 90;
+	}
 	verticalAngle -= EventManager::GetMouseMotionY() * angularSpeed * dt;
 	position = playerPosition;
 }
@@ -99,7 +105,7 @@ glm::mat4 ThirdPersonCamera::GetViewMatrix() const
 {
 	float theta = radians(horizontalAngle);
 	float phi = radians(verticalAngle);
-	float radius = 5.0f;
+	float radius = 9.0f;
 	vec3 lookAtPos = position - vec3(radius * cosf(phi)*cosf(theta),radius * sinf(phi), radius * -cosf(phi)*sinf(theta));
 	return glm::lookAt(lookAtPos, position + lookAt, vec3(0.0f, 1.0f, 0.0f));
 }

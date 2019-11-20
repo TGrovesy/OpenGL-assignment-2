@@ -23,47 +23,10 @@ material.ambient = 0.3 0.3 0.4
 material.diffuse = 0.4 0.4 0.4
 material.specular = 0.1 0.1 0.1
 
-
-[Cube]
-name     = "Cube"
-scaling  = 1.0 1.0 1.0
-position = 0.0 1.0 0.0
-rotation = 0.0 0.0 1.0 180
-colour = 1.0 1.0 0.0
-texture = grass
-material.shininess = 8
-material.ambient = 0.2 0.2 0.2
-material.diffuse = 0.3 0.3 0.3
-material.specular = 0.1 0.1 0.1
-
-[Cube]
-name     = "RectBox"
-scaling  = 10.0 1.0 10.0
-position = 0.0 1.0 0.0
-rotation = 0.0 0.0 1.0 180
-colour = 0.0 1.0 0.0
-texture = brick
-material.shininess = 8
-material.ambient = 0.4 0.4 0.4
-material.diffuse = 0.5 0.5 0.5
-material.specular = 0.3 0.3 0.3
-
-[Cube]
-name     = "Ground"
-scaling  = 100.0 1.0 100.0
-position = 0.0 10.5 0.0
-rotation = 0.0 0.0 1.0 0.0
-colour = 0.0 0.0 1.0
-texture = metal
-material.shininess = 8
-material.ambient = 0.3 0.3 0.4
-material.diffuse = 0.4 0.4 0.4
-material.specular = 0.1 0.1 0.1
-
 [PlayerCar]
 name     = "car1"
 scaling  = 1.0 1.0 1.0
-position = 0.0 5.0 0.0
+position = 10.0 5.0 0.0
 rotation = 0.0 0.0 1.0 0.0
 colour = 0.0 0.0 1.0
 material.shininess = 8

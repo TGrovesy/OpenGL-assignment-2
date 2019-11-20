@@ -12,7 +12,7 @@ using namespace glm;
 
 Model::Model()
 	: name("UNNAMED"), position(0.0f, 0.0f, 0.0f), scaling(1.0f, 1.0f, 1.0f), rotationAxis(0.0f, 1.0f, 0.0f),
-	rotationAngleInDegrees(0.0f), animation(nullptr)
+	rotationAngleInDegrees(0.0f), animation(nullptr), velocity(0.f)
 {
 }
 
@@ -22,6 +22,7 @@ Model::~Model()
 
 void Model::Update(float deltaTime)
 {
+	position += velocity * deltaTime;
 }
 
 void Model::Draw()
@@ -211,7 +212,7 @@ glm::mat4 Model::GetWorldMatrix() const
 
 void Model::SetPosition(glm::vec3 position)
 {
-	position = position;
+	this->position = position;
 }
 
 void Model::SetScaling(glm::vec3 scaling)
@@ -245,4 +246,8 @@ void Model::SetRotation(glm::vec3 axis, float angleDegrees)
 {
 	rotationAxis = axis;
 	rotationAngleInDegrees = angleDegrees;
+}
+
+void Model::SetVelocity(glm::vec3 velocity) {
+	this->velocity = velocity;
 }

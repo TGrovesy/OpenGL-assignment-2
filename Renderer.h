@@ -32,7 +32,8 @@ public:
 	static void CheckForErrors();
 	static bool PrintError();
 	static int GetTexture(std::string texture);
-	
+
+	static int LoadTexture(char* imagepath);
 	static void SetLightPos(glm::vec3 pos);
 
 protected:
@@ -45,5 +46,4 @@ private:
 	static unsigned int currentShader;
 
 	static void LoadAllTextures();
-	static int LoadTexture(char* imagepath);
 };

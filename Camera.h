@@ -8,6 +8,7 @@ public:
 	Camera();
 	virtual ~Camera();
 	void CurrentPlayerPosition(glm::vec3 pos) { playerPosition = pos; };
+	void CurrentPlayerRotationY(float rotationY) { playerRotationY = rotationY; };
 
 	virtual void Update(float deltaTime) = 0;
 
@@ -17,5 +18,6 @@ public:
 
 protected:
 	glm::vec3 playerPosition;
+	float playerRotationY;
 };
 

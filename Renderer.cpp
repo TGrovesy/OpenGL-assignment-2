@@ -315,6 +315,7 @@ void Renderer::LoadAllTextures() {
 	GLuint grassTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/grass.jpg");
 	GLuint metalTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/metal.jpg");
 	GLuint tireTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/tire.jpg");
+	GLuint smokeParticleTextureID = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/smokeParticle.png");
 	ERROR_TEXTURE = LoadTexture("../Source/OpenGL-assignment-2/Assets/Textures/ERROR.jpg");
 #endif
 
@@ -323,6 +324,7 @@ void Renderer::LoadAllTextures() {
 	textures->insert(pair<char*, int>("brick", brickTextureID));
 	textures->insert(pair<char*, int>("metal", metalTextureID));
 	textures->insert(pair<char*, int>("tire", tireTextureID));
+	textures->insert(pair<char*, int>("smokeParticle", smokeParticleTextureID));
 }
 
 int Renderer::GetTexture(std::string texture) {

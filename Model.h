@@ -25,6 +25,7 @@ public:
 	void SetScaling(glm::vec3 scaling);
 	void SetRotation(glm::vec3 axis, float angleDegrees);
 	void SetColour(glm::vec3 colour);
+	void SetVelocity(glm::vec3 velocity);
 
 	//Material
 	void SetMaterialAmbient(glm::vec3 ambient);
@@ -36,7 +37,6 @@ public:
 	glm::vec3 GetRotationAxis() const { return rotationAxis; }
 	float     GetRotationAngle() const { return rotationAngleInDegrees; }
 	std::string GetName() { return name; }
-
 	
 
 protected:
@@ -57,6 +57,8 @@ protected:
 	glm::vec3 lightDiffuse = glm::vec3(0.9f, 0.9f, 0.9f);
 	glm::vec3 lightSpecular = glm::vec3(0.9f, 0.9f, 0.9f);
 	glm::vec3 lightPosition = glm::vec3(0.0f, 10.0f, 0.0f);
+
+	glm::vec3 velocity;
 	
 	float     rotationAngleInDegrees;
 

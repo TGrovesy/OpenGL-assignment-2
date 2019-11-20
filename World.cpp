@@ -11,6 +11,7 @@
 #include "CubeModel.h"
 #include "LightModel.h"
 #include "CarModel.h"
+#include "ParticleQuad.h"
 
 #include <GLFW/glfw3.h>
 
@@ -21,7 +22,7 @@ World* World::instance;
 
 bool isFirstPerson = false;
 
-World::World() {
+World::World() :spawnTimer(0){
 	instance = this;
 
 	//TODO: setup camera
@@ -38,6 +39,7 @@ World::~World() {
 		delete *it;
 	}
 	model.clear();
+	particles.clear();
 
 	//TODO: clear animation and animation keys
 
@@ -59,6 +61,7 @@ void World::Update(float deltaTime) {
 
 	//Update current Camera
 	camera[currentCamera]->CurrentPlayerPosition(playerCar->GetPosition());
+	camera[currentCamera]->CurrentPlayerRotationY(playerCar->GetRotationAngle());
 	camera[currentCamera]->Update(deltaTime);
 
 	//check car
@@ -79,6 +82,18 @@ void World::Update(float deltaTime) {
 	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it) {
 		(*it)->Update(deltaTime);
 	}
+
+	//update particles
+	vector<ParticleQuad*>::iterator it = particles.begin();
+	while (it < particles.end()) {
+		(*it)->Update(deltaTime);
+		if ((*it)->expired()) {
+			it = particles.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
 }
 
 void World::Draw() {
@@ -96,9 +111,23 @@ void World::Draw() {
 
 
 	//Draw Models
-	for (vector<Model*>::iterator it = model.begin(); it < model.end(); ++it) {
+	vector<Model*>::iterator it = model.begin(); 
+	bool shouldErase = false;
+	while (it < model.end()) {
+		shouldErase = false; 
 		(*it)->Draw();
+		it++;
+		
 	}
+
+
+	vector<ParticleQuad*>::iterator itp = particles.begin();
+	while (itp < particles.end()) {
+		(*itp)->Draw();
+		itp++;
+	}
+
+	
 
 	//Once done with shader ensure we set it as previous
 	unsigned int prevShader = Renderer::GetCurrentShader();

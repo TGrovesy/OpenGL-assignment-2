@@ -1,5 +1,6 @@
 
 #include "CarModel.h"
+#include "ParticleQuad.h"
 #include "Renderer.h"
 #include "ShaderUHelper.h"
 #include "EventManager.h"
@@ -10,7 +11,7 @@
 
 using namespace glm;
 
-CarModel::CarModel(vec3 size) : CubeModel()
+CarModel::CarModel(vec3 size) : CubeModel(), spawnTimer(0)
 {
 	CubeModel::CubeModel();
 }
@@ -52,13 +53,49 @@ void CarModel::Update(float deltaTime)
 	}
 
 	position = carPos;
+	rotationAngleInDegrees = carYRotation;
+
+	//TODO: Remove and replace this to applicable car exhauset this is for testing only
+	spawnTimer += deltaTime;
+	if (spawnTimer > SPAWN_PERIOD) {
+		ParticleQuad* particle = new ParticleQuad();
+		//Give the particles some motion when created
+		float angle = EventManager::GetRandomFloat(0, 360);
+		vec4 randomSidewaysVelocity(0.5, 2, 0, 0);
+		randomSidewaysVelocity = glm::rotate(mat4(1.0f), glm::radians(angle), vec3(0, 1, 0)) * randomSidewaysVelocity;
+		particle->SetPosition(carPos);
+		particle->SetRotation(glm::vec3(0, 1, 0), carYRotation);
+		particle->SetVelocity(vec3(randomSidewaysVelocity));
+		exhaustParticles.push_back(particle);		//spawn
+
+		spawnTimer -= 0.25;
+	}
+
+	//update particles
+	std::vector<ParticleQuad*>::iterator it = exhaustParticles.begin();
+	while (it < exhaustParticles.end()) {
+		(*it)->Update(deltaTime);
+		if ((*it)->expired()) {
+			it = exhaustParticles.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+	
 }
 
 void CarModel::Draw()
 {
+	std::vector<ParticleQuad*>::iterator itp = exhaustParticles.begin();
+	while (itp < exhaustParticles.end()) {
+		(*itp)->Draw();
+		itp++;
+	}
 	Renderer::SetShader(SHADER_TEXTURE_LIGHTING);
 	glUseProgram(Renderer::GetShaderProgramID());
-	Model::Draw();
+	Model::Draw(); 
+	
 	glBindTexture(GL_TEXTURE_2D, Renderer::GetTexture(textureName));
 	// Draw the Vertex Buffer
 	glBindVertexArray(VAO);
@@ -206,6 +243,8 @@ void CarModel::Draw()
 	else if (drawMode == 2) {
 		glDrawArrays(GL_LINES, 0, 54);
 	}
+
+	
 }
 
 
